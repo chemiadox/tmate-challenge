@@ -7,6 +7,6 @@ const config = configDotenv({ path: __dirname + '/../../.env' });
 
 export class ConfigService {
   get(name: Environment): string {
-    return env[name] || config.parsed![name] || '';
+    return env[name] || (config.parsed ? config.parsed[name] : '');
   }
 }

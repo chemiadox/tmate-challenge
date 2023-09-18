@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  new-service:
+    image: node:latest
+    networks:
+      - backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../dist:/dist:rw
+    env_file:
+      - ../.env
+    command: sh -c 'cd /dist; rm -rf node_modules; npm ci --only-production; ./node_modules/.bin/nodemon index.js'
+
+networks:
+  backend:

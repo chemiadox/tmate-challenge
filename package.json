@@ -4,13 +4,12 @@
   "description": "Tmate statistics service",
   "main": "index.js",
   "_moduleAliases": {
-    "@": "dist"
+    "@": "./"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp package*.json dist && cd dist && npm ci --only-production",
     "start": "node dist/index.js",
-    "dev": "concurrently \"tsc -w\" \"nodemon -q dist/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm run build && concurrently \"tsc -w\" \"nodemon -q dist/index.js\""
   },
   "author": "",
   "license": "ISC",
