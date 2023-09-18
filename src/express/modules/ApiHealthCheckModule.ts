@@ -1,6 +1,7 @@
 import expressWs from 'express-ws';
-import { ApiModuleInterface } from "@/types/ApiModuleInterface";
 import { Request, Response } from "express";
+
+import { ApiModuleInterface } from "@/types/ApiModuleInterface";
 import { Environment } from "@/types/Environment";
 import { ConfigService } from "@/services/ConfigService";
 

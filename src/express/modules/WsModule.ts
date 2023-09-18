@@ -5,12 +5,16 @@ import { ApiModuleInterface } from "@/types/ApiModuleInterface";
 import { ConfigService } from "@/services/ConfigService";
 import { Environment } from "@/types/Environment";
 import { AuthService } from "@/services/AuthService";
-import { WebSocketCloseCodes, WebSocketCloseMessages } from "@/types/WebSocket";
+import { UserRequest, UserRequestAction, WebSocketCloseCodes, WebSocketCloseMessages } from "@/types/WebSocket";
+import { WebSocketService } from "@/services/WebSocketService";
 
 export class WsModule implements ApiModuleInterface {
   constructor (
-    protected readonly configService: ConfigService,
-    protected readonly authService: AuthService,
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+    private readonly userSebSocketService: WebSocketService,
+    private readonly roomWebSocketService: WebSocketService,
+
   ) {}
   registerHandlers (express: expressWs.Application): void {
     const route = this.configService.get(Environment.WS_ROUTE);
@@ -25,7 +29,20 @@ export class WsModule implements ApiModuleInterface {
         return;
       }
 
-      ws.send('ok');
+      ws.on('message', (data: WS.RawData) => {
+        try {
+          const message = JSON.parse(data.toString()) as UserRequest;
+
+          if (message.action === UserRequestAction.Subscribe) {
+            ws.send('Filtering');
+            return;
+          }
+
+          throw new Error('Not implemented');
+        } catch (err: unknown) {
+          ws.send((<Error>err).message);
+        }
+      })
     });
   }
 }

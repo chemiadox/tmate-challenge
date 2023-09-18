@@ -5,3 +5,12 @@ export enum WebSocketCloseCodes {
 export enum WebSocketCloseMessages {
   Unauthorized= 'Unauthorized',
 }
+
+export enum UserRequestAction {
+  Subscribe = 'subscribe',
+}
+
+export type UserRequest = {
+  action: UserRequestAction;
+  filters: object;
+}

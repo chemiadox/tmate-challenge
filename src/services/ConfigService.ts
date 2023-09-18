@@ -6,7 +6,7 @@ import { Environment } from "@/types/Environment";
 const config = configDotenv({ path: __dirname + '/../../.env' });
 
 export class ConfigService {
-  get(name: Environment): string | undefined {
-    return env[name] || config.parsed![name];
+  get(name: Environment): string {
+    return env[name] || config.parsed![name] || '';
   }
 }

@@ -1,8 +1,9 @@
+import express from 'express';
+import expressWs from "express-ws";
+
 import { ConfigService } from '@/services/ConfigService';
 import { Environment } from '@/types/Environment';
-import express from 'express';
 import { ApiModuleInterface } from "@/types/ApiModuleInterface";
-import expressWs from "express-ws";
 
 export class ExpressApp {
   constructor (
