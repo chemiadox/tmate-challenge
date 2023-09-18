@@ -9,13 +9,14 @@ export class ApiHealthCheckModule implements ApiModuleInterface {
   constructor (protected readonly configService: ConfigService) {}
   registerHandlers(express: expressWs.Instance): void {
     const route = this.configService.get(Environment.GET_HEALTH_CHECK_ROUTE);
+    const { app } = express;
 
-    if (!route) {
+    if (!route.length) {
       throw new Error(`Cannot register http handler for ${ApiHealthCheckModule.name}`);
     }
 
-    express.app.get(route, (req: Request, res: Response) => {
-      res.send('ok');
+    app.get(route, (req: Request, res: Response) => {
+      res.send('Online');
     });
   }
 }

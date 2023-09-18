@@ -1,11 +1,17 @@
-import { Request } from 'express';
-import expressWs from 'express-ws';
 import * as WS from 'ws';
+import expressWs from 'express-ws';
+import { Request } from 'express';
+
 import { ApiModuleInterface } from "@/types/ApiModuleInterface";
 import { ConfigService } from "@/services/ConfigService";
 import { Environment } from "@/types/Environment";
 import { AuthService } from "@/services/AuthService";
-import { UserRequest, UserRequestAction, WebSocketCloseCodes, WebSocketCloseMessages } from "@/types/WebSocket";
+import {
+  UserRequest,
+  UserRequestAction,
+  WebSocketCloseCodes,
+  WebSocketCloseMessages,
+} from "@/types/WebSocket";
 import { WebSocketService } from "@/services/WebSocketService";
 import { PlayerState } from "@/types/PlayerState";
 import { GameState } from "@/types/GameState";
@@ -26,7 +32,7 @@ export class WsModule implements ApiModuleInterface {
     const { app } = express;
     const route = this.configService.get(Environment.WS_ROUTE);
 
-    if (!route) {
+    if (!route.length) {
       throw new Error(`Cannot register http handler for ${WsModule.name}`);
     }
 
