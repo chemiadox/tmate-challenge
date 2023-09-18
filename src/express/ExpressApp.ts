@@ -15,7 +15,7 @@ export class ExpressApp {
 
     this.apiModules.forEach((module: ApiModuleInterface) => {
       module.registerHandlers(app);
-    })
+    });
 
     app.listen(port, () => {
       console.log(`HTTP server started at ${new Date()} on ${port}`);
