@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "Tmate statistics service",
   "main": "index.js",
+  "_moduleAliases": {
+    "@": "dist"
+  },
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "dev": "concurrently \"tsc -w\" \"nodemon -q dist/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -19,6 +22,7 @@
     "@types/express": "^4.17.17",
     "@types/node": "^20.6.2",
     "concurrently": "^8.2.1",
+    "module-alias": "^2.2.3",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2"
   }
