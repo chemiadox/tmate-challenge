@@ -1,3 +1,5 @@
+import { SubscriptionFilters } from "@/types/SubscriptionFilters";
+
 export enum WebSocketCloseCodes {
   Unauthorized = 4001,
 }
@@ -12,5 +14,5 @@ export enum UserRequestAction {
 
 export type UserRequest = {
   action: UserRequestAction;
-  filters: object;
+  filters: SubscriptionFilters;
 }

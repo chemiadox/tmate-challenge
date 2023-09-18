@@ -12,14 +12,14 @@ export class ExpressApp {
   ) {}
 
   start() {
-    const app: expressWs.Application = expressWs(express()).app;
+    const app: expressWs.Instance = expressWs(express());
     const port = this.config.get(Environment.HTTP_PORT);
 
     this.apiModules.forEach((module: ApiModuleInterface) => {
       module.registerHandlers(app);
     });
 
-    app.listen(port, () => {
+    app.app.listen(port, () => {
       console.log(`HTTP server started at ${new Date()} on ${port}`);
     });
   }

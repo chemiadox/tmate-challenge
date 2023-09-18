@@ -9,8 +9,13 @@ import { Environment } from "@/types/Environment";
 
 const configService: ConfigService = new ConfigService();
 const authService: AuthService = new AuthService(configService);
-const userWebSocketService = new WebSocketService(configService.get(Environment.WS_USER_SERVICE_URL));
-const roomWebSocketService = new WebSocketService(configService.get(Environment.WS_ROOM_SERVICE_URL));
+
+const userUrl = configService.get(Environment.WS_USER_SERVICE_URL);
+const userWebSocketService = new WebSocketService(userUrl);
+
+const gameUrl = configService.get(Environment.WS_GAME_SERVICE_URL);
+const gameWebSocketService = new WebSocketService(gameUrl);
+
 
 (async (): Promise<void> => {
   const app: ExpressApp = new ExpressApp(
@@ -21,7 +26,7 @@ const roomWebSocketService = new WebSocketService(configService.get(Environment.
         configService,
         authService,
         userWebSocketService,
-        roomWebSocketService,
+        gameWebSocketService,
       ),
     ]
   );

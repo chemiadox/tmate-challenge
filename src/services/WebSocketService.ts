@@ -3,8 +3,8 @@ import WebSocket from 'ws';
 export class WebSocketService {
   ws: WebSocket;
 
-  constructor (private readonly url: string | URL) {
-    this.ws = new WebSocket(url);
+  constructor (private readonly url: string) {
+    this.ws = new WebSocket(this.url);
     this.ws.on("error", (err: Error) => {
       throw new Error(err.message);
     });
@@ -16,7 +16,7 @@ export class WebSocketService {
         const message = JSON.parse(data.toString());
         listener(message);
       } catch (err: unknown) {
-        console.log((<Error>err).message);
+        console.log((err as Error).message);
       }
     });
   }

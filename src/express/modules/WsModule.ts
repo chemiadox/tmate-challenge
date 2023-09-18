@@ -7,42 +7,71 @@ import { Environment } from "@/types/Environment";
 import { AuthService } from "@/services/AuthService";
 import { UserRequest, UserRequestAction, WebSocketCloseCodes, WebSocketCloseMessages } from "@/types/WebSocket";
 import { WebSocketService } from "@/services/WebSocketService";
+import { PlayerState } from "@/types/PlayerState";
+import { GameState } from "@/types/GameState";
+import { SubscriptionFilters } from "@/types/SubscriptionFilters";
+import { gameToFreeTable, gameToOccupiedTable } from "@/helpers/transformers";
 
 export class WsModule implements ApiModuleInterface {
+  filters: SubscriptionFilters = {};
+
   constructor (
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
     private readonly userWebSocketService: WebSocketService,
     private readonly roomWebSocketService: WebSocketService,
-
   ) {}
-  registerHandlers (express: expressWs.Application): void {
+
+  registerHandlers(express: expressWs.Instance): void {
+    const { app } = express;
     const route = this.configService.get(Environment.WS_ROUTE);
 
     if (!route) {
       throw new Error(`Cannot register http handler for ${WsModule.name}`);
     }
 
-    express.ws(route, (ws: WS, req: Request) => {
+    app.ws(route, (ws: WS, req: Request) => {
       if (!this.authService.isAuthorized(req)) {
         ws.close(WebSocketCloseCodes.Unauthorized, WebSocketCloseMessages.Unauthorized);
         return;
       }
 
+      this.userWebSocketService.onMessage((data: Object): void => {
+        const playerState = data as PlayerState;
+      });
+
+      this.roomWebSocketService.onMessage((data: Object): void => {
+        const gameState = data as GameState;
+
+        if (gameState.seats && gameState.seats.length && this.filters.occupiedTable) {
+          ws.send(JSON.stringify(gameToOccupiedTable(gameState)));
+        }
+
+        if ((!gameState.seats || !gameState.seats.length) && this.filters.freeTable) {
+          ws.send(JSON.stringify(gameToFreeTable(gameState)));
+        }
+      });
+
       ws.on('message', (data: WS.RawData) => {
         try {
-          const message = JSON.parse(data.toString()) as UserRequest;
-
-          if (message.action === UserRequestAction.Subscribe) {
-            ws.send('Filtering');
-            return;
-          }
-
-          throw new Error('Not implemented');
+          this.dispatch(ws, data);
         } catch (err: unknown) {
-          ws.send((<Error>err).message);
+          ws.send((err as Error).message);
         }
-      })
+      });
     });
+  }
+
+  private dispatch(ws: WS, data: WS.RawData) {
+    const message = JSON.parse(data.toString()) as UserRequest;
+
+    if (message.action === UserRequestAction.Subscribe) {
+      this.filters = message.filters;
+
+      ws.send(JSON.stringify(this.filters));
+      return;
+    }
+
+    throw new Error('Not implemented');
   }
 }
