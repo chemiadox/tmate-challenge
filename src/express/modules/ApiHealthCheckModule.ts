@@ -7,6 +7,7 @@ import { ConfigService } from "@/services/ConfigService";
 
 export class ApiHealthCheckModule implements ApiModuleInterface {
   constructor (protected readonly configService: ConfigService) {}
+
   registerHandlers(express: expressWs.Instance): void {
     const route = this.configService.get(Environment.GET_HEALTH_CHECK_ROUTE);
     const { app } = express;
