@@ -1,15 +1,19 @@
 import 'module-alias/register';
 import { ConfigService } from '@/services/ConfigService';
 import { ExpressApp } from "@/express/ExpressApp";
-import { ApiHealthCheckModule } from "@/express/modules/HealthCheckModule";
+import { ApiHealthCheckModule } from "@/express/modules/ApiHealthCheckModule";
+import { WsModule } from "@/express/modules/WsModule";
+import { AuthService } from "@/services/AuthService";
 
-const config: ConfigService = new ConfigService();
+const configService: ConfigService = new ConfigService();
+const authService: AuthService = new AuthService(configService);
 
 (async (): Promise<void> => {
   const app: ExpressApp = new ExpressApp(
-    config,
+    configService,
     [
-      new ApiHealthCheckModule(config),
+      new ApiHealthCheckModule(configService),
+      new WsModule(configService, authService),
     ]
   );
 

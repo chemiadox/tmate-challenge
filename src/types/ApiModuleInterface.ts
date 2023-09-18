@@ -1,5 +1,5 @@
-import { Express } from "express";
+import expressWs from "express-ws";
 
 export interface ApiModuleInterface {
-  registerHandlers(express: Express): void;
+  registerHandlers(express: expressWs.Application): void;
 }

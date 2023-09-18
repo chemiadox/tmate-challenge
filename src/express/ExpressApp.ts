@@ -1,7 +1,8 @@
 import { ConfigService } from '@/services/ConfigService';
 import { Environment } from '@/types/Environment';
-import express, { Express } from 'express';
+import express from 'express';
 import { ApiModuleInterface } from "@/types/ApiModuleInterface";
+import expressWs from "express-ws";
 
 export class ExpressApp {
   constructor (
@@ -10,7 +11,7 @@ export class ExpressApp {
   ) {}
 
   start() {
-    const app: Express = express();
+    const app: expressWs.Application = expressWs(express()).app;
     const port = this.config.get(Environment.HTTP_PORT);
 
     this.apiModules.forEach((module: ApiModuleInterface) => {
