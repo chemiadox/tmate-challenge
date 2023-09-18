@@ -1,7 +1,17 @@
 import 'module-alias/register';
-import { Environment } from '@/types/Environment';
 import { ConfigService } from '@/services/ConfigService';
+import { ExpressApp } from "@/express/ExpressApp";
+import { ApiHealthCheckModule } from "@/express/modules/HealthCheckModule";
 
-const config = new ConfigService();
+const config: ConfigService = new ConfigService();
 
-console.log('HTTP_PORT', config.get(Environment.HTTP_PORT));
+(async (): Promise<void> => {
+  const app: ExpressApp = new ExpressApp(
+    config,
+    [
+      new ApiHealthCheckModule(config),
+    ]
+  );
+
+  app.start();
+})();

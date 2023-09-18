@@ -1,3 +1,4 @@
 export enum Environment {
-  HTTP_PORT= 'HTTP_PORT'
+  HTTP_PORT= 'HTTP_PORT',
+  GET_HEALTH_CHECK_ROUTE = 'GET_HEALTH_CHECK_ROUTE',
 }
