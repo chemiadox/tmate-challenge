@@ -12,7 +12,7 @@ export class WsModule implements ApiModuleInterface {
   constructor (
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
-    private readonly userSebSocketService: WebSocketService,
+    private readonly userWebSocketService: WebSocketService,
     private readonly roomWebSocketService: WebSocketService,
 
   ) {}
