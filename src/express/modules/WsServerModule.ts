@@ -12,20 +12,18 @@ import {
   WebSocketCloseCodes,
   WebSocketCloseMessages,
 } from "@/types/WebSocket";
-import { WebSocketService } from "@/services/WebSocketService";
+import { WsClientModule } from "@/express/modules/WsClientModule";
 import { PlayerState } from "@/types/PlayerState";
 import { GameState } from "@/types/GameState";
 import { SubscriptionFilters } from "@/types/SubscriptionFilters";
 import { gameToFreeTable, gameToOccupiedTable } from "@/helpers/transformers";
 
-export class WssModule implements ApiModuleInterface {
+export class WsServerModule implements ApiModuleInterface {
   filters: SubscriptionFilters = {};
 
   constructor (
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
-    private readonly userWebSocketService: WebSocketService,
-    private readonly roomWebSocketService: WebSocketService,
   ) {}
 
   registerHandlers(express: expressWs.Instance): void {
@@ -33,7 +31,7 @@ export class WssModule implements ApiModuleInterface {
     const route = this.configService.get(Environment.WS_ROUTE);
 
     if (!route.length) {
-      throw new Error(`Cannot register http handler for ${WssModule.name}`);
+      throw new Error(`Cannot register http handler for ${WsServerModule.name}`);
     }
 
     app.ws(route, (ws: WS, req: Request) => {
@@ -42,21 +40,21 @@ export class WssModule implements ApiModuleInterface {
         return;
       }
 
-      this.userWebSocketService.onMessage((data: Object): void => {
-        const playerState = data as PlayerState;
-      });
-
-      this.roomWebSocketService.onMessage((data: Object): void => {
-        const gameState = data as GameState;
-
-        if (gameState.seats && gameState.seats.length && this.filters.occupiedTable) {
-          ws.send(JSON.stringify(gameToOccupiedTable(gameState)));
-        }
-
-        if ((!gameState.seats || !gameState.seats.length) && this.filters.freeTable) {
-          ws.send(JSON.stringify(gameToFreeTable(gameState)));
-        }
-      });
+      // this.userWebSocketService.onMessage((data: Object): void => {
+      //   const playerState = data as PlayerState;
+      // });
+      //
+      // this.roomWebSocketService.onMessage((data: Object): void => {
+      //   const gameState = data as GameState;
+      //
+      //   if (gameState.seats && gameState.seats.length && this.filters.occupiedTable) {
+      //     ws.send(JSON.stringify(gameToOccupiedTable(gameState)));
+      //   }
+      //
+      //   if ((!gameState.seats || !gameState.seats.length) && this.filters.freeTable) {
+      //     ws.send(JSON.stringify(gameToFreeTable(gameState)));
+      //   }
+      // });
 
       ws.on('message', (data: WS.RawData) => {
         try {

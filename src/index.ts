@@ -2,19 +2,19 @@ import 'module-alias/register';
 import { ConfigService } from '@/services/ConfigService';
 import { ExpressApp } from "@/express/ExpressApp";
 import { ApiHealthCheckModule } from "@/express/modules/ApiHealthCheckModule";
-import { WssModule } from "@/express/modules/WssModule";
+import { WsServerModule } from "@/express/modules/WsServerModule";
 import { AuthService } from "@/services/AuthService";
-import { WebSocketService } from "@/services/WebSocketService";
+import { WsClientModule } from "@/express/modules/WsClientModule";
 import { Environment } from "@/types/Environment";
 
 const configService: ConfigService = new ConfigService();
 const authService: AuthService = new AuthService(configService);
 
 const userUrl = configService.get(Environment.WS_USER_SERVICE_URL);
-const userWebSocketService = new WebSocketService(userUrl);
+const userWebSocketService = new WsClientModule(userUrl);
 
 const gameUrl = configService.get(Environment.WS_GAME_SERVICE_URL);
-const gameWebSocketService = new WebSocketService(gameUrl);
+const gameWebSocketService = new WsClientModule(gameUrl);
 
 
 (async (): Promise<void> => {
@@ -22,11 +22,9 @@ const gameWebSocketService = new WebSocketService(gameUrl);
     configService,
     [
       new ApiHealthCheckModule(configService),
-      new WssModule(
+      new WsServerModule(
         configService,
         authService,
-        userWebSocketService,
-        gameWebSocketService,
       ),
     ]
   );
