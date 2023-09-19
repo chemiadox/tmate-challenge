@@ -1,6 +1,7 @@
-import { Request } from "express";
-import { ConfigService } from "@/services/ConfigService";
-import { Environment } from "@/types/Environment";
+import { Request } from 'express';
+
+import { ConfigService } from '@/services/ConfigService';
+import { Environment } from '@/types/Environment';
 
 export class AuthService {
   constructor (private readonly configService: ConfigService) {}

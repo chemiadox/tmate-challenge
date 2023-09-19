@@ -2,7 +2,7 @@ import 'module-alias/register';
 import { ConfigService } from '@/services/ConfigService';
 import { ExpressApp } from "@/express/ExpressApp";
 import { ApiHealthCheckModule } from "@/express/modules/ApiHealthCheckModule";
-import { WsModule } from "@/express/modules/WsModule";
+import { WssModule } from "@/express/modules/WssModule";
 import { AuthService } from "@/services/AuthService";
 import { WebSocketService } from "@/services/WebSocketService";
 import { Environment } from "@/types/Environment";
@@ -22,7 +22,7 @@ const gameWebSocketService = new WebSocketService(gameUrl);
     configService,
     [
       new ApiHealthCheckModule(configService),
-      new WsModule(
+      new WssModule(
         configService,
         authService,
         userWebSocketService,

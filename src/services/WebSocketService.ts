@@ -5,7 +5,7 @@ export class WebSocketService {
 
   constructor (private readonly url: string) {
     this.ws = new WebSocket(this.url);
-    this.ws.on("error", (err: Error) => {
+    this.ws.on('error', (err: Error) => {
       throw new Error(err.message);
     });
   }

@@ -18,7 +18,7 @@ import { GameState } from "@/types/GameState";
 import { SubscriptionFilters } from "@/types/SubscriptionFilters";
 import { gameToFreeTable, gameToOccupiedTable } from "@/helpers/transformers";
 
-export class WsModule implements ApiModuleInterface {
+export class WssModule implements ApiModuleInterface {
   filters: SubscriptionFilters = {};
 
   constructor (
@@ -33,7 +33,7 @@ export class WsModule implements ApiModuleInterface {
     const route = this.configService.get(Environment.WS_ROUTE);
 
     if (!route.length) {
-      throw new Error(`Cannot register http handler for ${WsModule.name}`);
+      throw new Error(`Cannot register http handler for ${WssModule.name}`);
     }
 
     app.ws(route, (ws: WS, req: Request) => {
